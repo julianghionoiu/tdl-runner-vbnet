@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4034F302-9BF4-442C-A195-086BCAC6D028}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>BeFaster.App.Module1</StartupObject>
+    <StartupObject>BeFaster.App.Start</StartupObject>
     <RootNamespace>BeFaster.App</RootNamespace>
     <AssemblyName>BeFaster.App</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -68,7 +68,11 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Module1.vb" />
+    <Compile Include="Solutions\Hello.vb" />
+    <Compile Include="Solutions\FizzBuzz.vb" />
+    <Compile Include="Solutions\Checkout.vb" />
+    <Compile Include="Solutions\Sum.vb" />
+    <Compile Include="Start.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -105,5 +109,12 @@
     </None>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BeFaster.Runner\BeFaster.Runner.csproj">
+      <Project>{a791c7cb-2abf-40a0-8d3b-93aa58c97ae5}</Project>
+      <Name>BeFaster.Runner</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

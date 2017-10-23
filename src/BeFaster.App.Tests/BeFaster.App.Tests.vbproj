@@ -99,5 +99,11 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BeFaster.App\BeFaster.App.vbproj">
+      <Project>{4034f302-9bf4-442c-a195-086bcac6d028}</Project>
+      <Name>BeFaster.App</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
