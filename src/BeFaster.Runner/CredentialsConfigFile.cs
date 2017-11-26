@@ -20,7 +20,8 @@ namespace BeFaster.Runner
                 foreach (var row in File.ReadAllLines(credentialsPath))
                 {
                     var data = row.Split('=');
-                    Properties.Add(data[0], string.Join("=", data.Skip(1)));
+                    var key = data[0];
+                    Properties[key] = string.Join("=", data.Skip(1));
                 }
             }
             catch (IOException e)

@@ -80,6 +80,9 @@ namespace BeFaster.Runner
             client.GoLiveWith(processingRules);
 
             RecordingSystem.NotifyEvent(RoundManagement.GetLastFetchedRound(), runnerAction.ShortName);
+
+            Console.Write("\nPress any key to exit... ");
+            Console.ReadLine();
         }
 
         private static Optional<RunnerAction> ExtractActionFrom(IEnumerable<string> args)
