@@ -85,7 +85,7 @@ namespace BeFaster.Runner
             if (holdAfterFinish)
             {
                 Console.Write("\nPress any key to exit... ");
-                Console.ReadLine();
+                Console.ReadKey();
             }
         }
 
