@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WindowsConsoleSupport.cs" />
     <Compile Include="CredentialsConfigFile.cs" />
     <Compile Include="Exceptions\ConfigNotFoundException.cs" />
     <Compile Include="Exceptions\RecordingSystemNotReachable.cs" />

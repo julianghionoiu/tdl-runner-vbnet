@@ -54,6 +54,8 @@ namespace BeFaster.Runner
                 return;
             }
 
+            WindowsConsoleSupport.EnableColours();
+
             Console.WriteLine("Connecting to " + hostname);
 
             if (UseExperimentalFeature())
