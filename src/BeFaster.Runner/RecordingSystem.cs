@@ -11,6 +11,12 @@ namespace BeFaster.Runner
 
         private static readonly IRestClient RestClient = new RestClient(RecordingSystemEndpoint);
 
+        public static bool IsRecordingSystemOk()
+        {
+            // ReSharper disable once SimplifyConditionalTernaryExpression
+            return RecordingSystem.IsRecordingRequired() ? RecordingSystem.IsRunning() : true;
+        }
+
         public static bool IsRunning()
         {
             try
@@ -26,10 +32,19 @@ namespace BeFaster.Runner
             }
         }
 
+        private static bool IsRecordingRequired()
+        {
+            return bool.Parse(CredentialsConfigFile.Get("tdl_require_rec", "true"));
+        }
+
         public static void NotifyEvent(string lastFetchedRound, string actionName)
         {
             Console.WriteLine($@"Notify round ""{lastFetchedRound}"", event ""{actionName}""");
 
+            if (!IsRecordingRequired()) {
+                return;
+            }
+            
             try
             {
                 var request = new RestRequest("notify", Method.POST);

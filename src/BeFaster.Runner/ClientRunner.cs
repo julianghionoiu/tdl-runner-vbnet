@@ -44,16 +44,60 @@ namespace BeFaster.Runner
             return this;
         }
 
+        //~~~~~~~~ The entry point ~~~~~~~~~
+
         public void Start(string[] args)
         {
-            if (!IsRecordingSystemOk())
+            if (!RecordingSystem.IsRecordingSystemOk())
             {
                 Console.WriteLine("Please run `record_screen_and_upload` before continuing.");
                 return;
             }
 
-            var runnerAction = ExtractActionFrom(args).OrElse(defaultRunnerAction);
+            Console.WriteLine("Connecting to " + hostname);
 
+            if (UseExperimentalFeature())
+            {
+                ExecuteServerActionFromUserInput(args);
+            }
+            else
+            {
+                ExecuteRunnerActionFromArgs(args);
+            }
+
+            bool holdAfterFinish = bool.Parse(CredentialsConfigFile.Get("tdl_hold_after_finish", "true"));
+            if (holdAfterFinish)
+            {
+                Console.Write("\nPress any key to exit... ");
+                Console.ReadKey();
+            }
+        }
+
+        private static bool UseExperimentalFeature()
+        {
+            return bool.Parse(CredentialsConfigFile.Get("tdl_enable_experimental", "false"));
+        }
+
+
+        //~~~~~~~~ Runner Actions ~~~~~~~~~
+
+        private void ExecuteRunnerActionFromArgs(string[] args)
+        {
+            var runnerAction = ExtractActionFrom(args).OrElse(defaultRunnerAction);
+            ExecuteRunnerAction(runnerAction);
+        }
+
+        private static Optional<RunnerAction> ExtractActionFrom(IEnumerable<string> args)
+        {
+            var actionName = args.FirstOrDefault() ?? string.Empty;
+            var action = RunnerAction.AllActions.FirstOrDefault(a =>
+                a.LongName.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+            return Optional<RunnerAction>.OfNullable(action);
+        }
+
+        private void ExecuteRunnerAction(RunnerAction runnerAction)
+        {
             Console.WriteLine("Chosen action is: " + runnerAction.LongName);
 
             var client = TdlClient.Build()
@@ -66,7 +110,7 @@ namespace BeFaster.Runner
 
             processingRules
                 .On("display_description")
-                .Call(p => RoundManagement.DisplayAndSaveDescription(p[0], p[1]))
+                .Call(p => RoundManagement.SaveDescription(p[0], p[1]))
                 .Then(ClientActions.Publish);
 
             foreach (var solution in solutions)
@@ -80,25 +124,64 @@ namespace BeFaster.Runner
             client.GoLiveWith(processingRules);
 
             RecordingSystem.NotifyEvent(RoundManagement.GetLastFetchedRound(), runnerAction.ShortName);
+        }
 
-            bool holdAfterFinish = bool.Parse(CredentialsConfigFile.Get("tdl_hold_after_finish", "true"));
-            if (holdAfterFinish)
+        //~~~~~~~~ Server Actions ~~~~~~~~~
+
+        private void ExecuteServerActionFromUserInput(string[] args)
+        {
+            try
             {
-                Console.Write("\nPress any key to exit... ");
-                Console.ReadKey();
+                var journeyId = CredentialsConfigFile.Get("tdl_journey_id");
+                var useColours = bool.Parse(CredentialsConfigFile.Get("tdl_use_coloured_output", "true"));
+                var challengeServerClient = new ChallengeServerClient(hostname, journeyId, useColours);
+
+                var journeyProgress = challengeServerClient.GetJourneyProgress();
+                Console.WriteLine(journeyProgress);
+                
+                var availableActions = challengeServerClient.GetAvailableActions();
+                Console.WriteLine(availableActions);
+                
+                if (availableActions.Contains("No actions available.")) {
+                    return;
+                }
+                
+                var userInput = GetUserInput(args);
+                
+                //Obs: Deploy seems to be the only "special" action, everything else is driven by the server
+                if (userInput.Equals("deploy")) {
+                    // DEBT - the RecordingSystem.notifyEvent happens in executeRunnerAction, but once we migrate form the legacy system, we should move it outside for clarity
+                    var runnerAction = RunnerAction.DeployToProduction;
+                    ExecuteRunnerAction(runnerAction);
+                }
+        
+                var actionFeedback = challengeServerClient.SendAction(userInput);
+                Console.WriteLine(actionFeedback);
+
+                var responseString = challengeServerClient.GetRoundDescription();
+                RoundManagement.SaveDescription(
+                    responseString,
+                    lastFetchedRound => RecordingSystem.NotifyEvent(lastFetchedRound, RunnerAction.GetNewRoundDescription.ShortName)
+                );
+                
+            } catch (ServerErrorException e) {
+                Console.Error.WriteLine("Server experienced an error. Try again. " + e);
+            } catch (OtherCommunicationException e) {
+                Console.Error.WriteLine("Client threw an unexpected error. " + e);
+            } catch (ClientErrorException e) {
+                Console.Error.WriteLine("The client sent something the server didn't expect.");
+                Console.WriteLine(e.Message);
             }
         }
 
-        private static Optional<RunnerAction> ExtractActionFrom(IEnumerable<string> args)
+        private string GetUserInput(string[] args)
         {
-            var actionName = args.FirstOrDefault() ?? string.Empty;
-            var action = RunnerAction.AllActions.FirstOrDefault(a => a.LongName.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-
-            return Optional<RunnerAction>.OfNullable(action);
+            return args.Length > 0 ? args[0] : ReadInputFromConsole();
         }
 
-        private static bool IsRecordingSystemOk() =>
-            !bool.Parse(CredentialsConfigFile.Get("tdl_require_rec", "true")) ||
-            RecordingSystem.IsRunning();
+        private string ReadInputFromConsole()
+        {
+            return Console.ReadLine();
+        }
     }
 }

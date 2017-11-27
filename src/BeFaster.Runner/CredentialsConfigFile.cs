@@ -21,7 +21,7 @@ namespace BeFaster.Runner
                 {
                     var data = row.Split('=');
                     var key = data[0];
-                    Properties[key] = string.Join("=", data.Skip(1));
+                    Properties[key] = string.Join("=", data.Skip(1)).Replace("\\=","=");
                 }
             }
             catch (IOException e)
