@@ -73,7 +73,7 @@
     <Compile Include="Solutions\FizzBuzz.vb" />
     <Compile Include="Solutions\Checkout.vb" />
     <Compile Include="Solutions\Sum.vb" />
-    <Compile Include="Start.vb" />
+    <Compile Include="ConnectToServer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

@@ -36,7 +36,7 @@ Imports BeFaster.Runner.Extensions
 '  |  8.  |                                         | Check failed requests                         |
 '  |  9.  |                                         | Go to step 2.                                 |
 '  +------+-----------------------------------------+-----------------------------------------------+
-Module Start
+Module ConnectToServer
 
     Sub Main(args As String())
         ClientRunner.
