@@ -38,7 +38,7 @@ namespace BeFaster.Runner
             {
                 GetLastError();
             }
-            catch (DllNotFoundException)
+            catch (Exception)
             {
                 // Do nothing if no DLL present, at least we tried
                 return;
