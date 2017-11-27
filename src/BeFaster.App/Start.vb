@@ -41,7 +41,7 @@ Module Start
     Sub Main(args As String())
         ClientRunner.
             ForUsername(CredentialsConfigFile.Get("tdl_username")).
-            WithServerHostname("run.befaster.io").
+            WithServerHostname(CredentialsConfigFile.Get("tdl_hostname")).
             WithActionIfNoArgs(RunnerAction.TestConnectivity).
             WithSolutionFor("sum", Function(p() As String) Sum.Sum(p(0).AsInt(), p(1).AsInt())).
             WithSolutionFor("hello", Function(p() As String) Hello.Hello(p(0))).

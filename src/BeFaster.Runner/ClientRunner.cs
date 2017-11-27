@@ -81,8 +81,12 @@ namespace BeFaster.Runner
 
             RecordingSystem.NotifyEvent(RoundManagement.GetLastFetchedRound(), runnerAction.ShortName);
 
-            Console.Write("\nPress any key to exit... ");
-            Console.ReadLine();
+            bool holdAfterFinish = bool.Parse(CredentialsConfigFile.Get("tdl_hold_after_finish", "true"));
+            if (holdAfterFinish)
+            {
+                Console.Write("\nPress any key to exit... ");
+                Console.ReadLine();
+            }
         }
 
         private static Optional<RunnerAction> ExtractActionFrom(IEnumerable<string> args)
