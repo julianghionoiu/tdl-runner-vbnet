@@ -55,7 +55,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="TDL.Client, Version=0.14.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\TDL.Client.0.14.8\lib\net45\TDL.Client.dll</HintPath>
+      <HintPath>..\..\packages\TDL.Client.0.19.1\lib\net45\TDL.Client.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
