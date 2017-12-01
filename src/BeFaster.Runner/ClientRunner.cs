@@ -149,6 +149,11 @@ namespace BeFaster.Runner
                 }
                 
                 var userInput = GetUserInput(args);
+                if (userInput == null)
+                {
+                    Console.Error.WriteLine("No input stream detected. Please run this Solution on External Console.");
+                    return;
+                }
                 
                 //Obs: Deploy seems to be the only "special" action, everything else is driven by the server
                 if (userInput.Equals("deploy")) {
