@@ -36,7 +36,7 @@ Imports BeFaster.Runner.Extensions
 '   +------+-------------------------------------------------------------+
 '
 '
-Module ConnectToServer
+Module SendCommandToServer
 
     Sub Main(args As String())
         ClientRunner.
