@@ -1,6 +1,10 @@
 ﻿Imports BeFaster.App.Solutions
 Imports BeFaster.Runner
 Imports BeFaster.Runner.Extensions
+Imports BeFaster.Runner.Utils
+Imports TDL.Client
+Imports TDL.Client.Queue
+Imports TDL.Client.Runner
 
 '
 ' ~~~~~~~~~~ Running the system: ~~~~~~~~~~~~~
@@ -45,15 +49,22 @@ Imports BeFaster.Runner.Extensions
 Module SendCommandToServer
 
     Sub Main(args As String())
-        ClientRunner.
-            ForUsername(CredentialsConfigFile.Get("tdl_username")).
-            WithServerHostname(CredentialsConfigFile.Get("tdl_hostname")).
-            WithActionIfNoArgs(RunnerAction.TestConnectivity).
-            WithSolutionFor("sum", Function(p() As String) Sum.Sum(p(0).AsInt(), p(1).AsInt())).
-            WithSolutionFor("hello", Function(p() As String) Hello.Hello(p(0))).
-            WithSolutionFor("fizz_buzz", Function(p() As String) FizzBuzz.FizzBuzz(p(0).AsInt())).
-            WithSolutionFor("checkout", Function(p() As String) Checkout.Checkout(p(0))).
-            Start(args)
+
+        Dim runner As IImplementationRunner =
+            New QueueBasedImplementationRunner.Builder().
+                SetConfig(Utils.GetRunnerConfig()).
+                WithSolutionFor("sum", Function(p() As String) Sum.Sum(p(0).AsInt(), p(1).AsInt())).
+                WithSolutionFor("hello", Function(p() As String) Hello.Hello(p(0))).
+                WithSolutionFor("fizz_buzz", Function(p() As String) FizzBuzz.FizzBuzz(p(0).AsInt())).
+                WithSolutionFor("checkout", Function(p() As String) Checkout.Checkout(p(0))).
+                Create()
+
+        ChallengeSession.
+            ForRunner(runner).
+            WithConfig(Utils.GetConfig()).
+            WithActionProvider(New UserInputAction(args)).
+            Start()
+
     End Sub
 
 End Module

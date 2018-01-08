@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BeFaster.Runner.Exceptions;
 using BeFaster.Runner.Extensions;
 using BeFaster.Runner.Utils;
+using TDL.Client.Utils;
 
 namespace BeFaster.Runner
 {
@@ -21,7 +23,7 @@ namespace BeFaster.Runner
                 {
                     var data = row.Split('=');
                     var key = data[0];
-                    Properties[key] = string.Join("=", data.Skip(1)).Replace("\\=","=");
+                    Properties[key] = string.Join("=", data.Skip(1)).Replace("\\=", "=");
                 }
             }
             catch (IOException e)
@@ -39,5 +41,8 @@ namespace BeFaster.Runner
             Optional<string>
                 .OfNullable(Properties.GetValueOrDefault(key))
                 .OrElse(defaultValue);
+
+        public static T Get<T>(string key, T defaultValue) =>
+            (T)Convert.ChangeType(Get(key), typeof(T));
     }
 }
