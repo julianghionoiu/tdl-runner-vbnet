@@ -65,6 +65,8 @@ Module SendCommandToServer
             WithActionProvider(New UserInputAction(args)).
             Start()
 
+        Console.Write("Press any key to continue . . . ")
+        Console.ReadKey()
     End Sub
 
 End Module
