@@ -1,4 +1,7 @@
-﻿Imports BeFaster.App.Solutions
+﻿Imports BeFaster.App.Solutions.SUM
+Imports BeFaster.App.Solutions.CHK
+Imports BeFaster.App.Solutions.HLO
+Imports BeFaster.App.Solutions.FIZ
 Imports BeFaster.Runner
 Imports BeFaster.Runner.Extensions
 Imports BeFaster.Runner.Utils

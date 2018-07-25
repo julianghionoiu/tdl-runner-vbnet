@@ -1,4 +1,4 @@
-﻿Imports BeFaster.App.Solutions
+﻿Imports BeFaster.App.Solutions.SUM
 Imports NUnit.Framework
 
 <TestFixture>

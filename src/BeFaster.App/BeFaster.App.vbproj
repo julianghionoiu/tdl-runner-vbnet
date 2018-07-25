@@ -2,6 +2,9 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <VbcToolExe>vbc</VbcToolExe>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4034F302-9BF4-442C-A195-086BCAC6D028}</ProjectGuid>
@@ -11,7 +14,7 @@
     <AssemblyName>BeFaster.App</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -102,10 +105,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Solutions\Hello.vb" />
-    <Compile Include="Solutions\FizzBuzz.vb" />
-    <Compile Include="Solutions\Checkout.vb" />
-    <Compile Include="Solutions\Sum.vb" />
+    <Compile Include="Solutions\HLO\Hello.vb" />
+    <Compile Include="Solutions\FIZ\FizzBuzz.vb" />
+    <Compile Include="Solutions\CHK\Checkout.vb" />
+    <Compile Include="Solutions\SUM\Sum.vb" />
     <Compile Include="SendCommandToServer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
