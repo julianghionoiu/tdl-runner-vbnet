@@ -70,7 +70,9 @@ if [ -f "${VBNET_INSTRUMENTED_COVERAGE_REPORT}" ]; then
                                   --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'")]' || true)
 
    if [[ -z "${COVERAGE_IN_PACKAGE}" ]]; then
-      exitAfterNoCoverageReportFoundError
+      echo $((TOTAL_COVERAGE_PERCENTAGE)) > ${VBNET_CODE_COVERAGE_INFO}
+      cat ${VBNET_CODE_COVERAGE_INFO}
+      exit 0
    fi
 
     COVERAGE_SUMMARY_FILE=${VBNET_TEST_COVERAGE_DIR}/coverage-summary-${CHALLENGE_ID}.xml
@@ -94,13 +96,13 @@ if [ -f "${VBNET_INSTRUMENTED_COVERAGE_REPORT}" ]; then
     summaryLines=$(wc -l < ${COVERAGE_SUMMARY_FILE})
 
     if [[ ${summaryLines} -eq 0 ]]; then
-        TOTAL_COVERAGE_PERCENTAGE=""
+        TOTAL_COVERAGE_PERCENTAGE=0
     else
         TOTAL_COVERAGE_PERCENTAGE=$(( ${TOTAL_COVERAGE_PERCENTAGE} / ${summaryLines} ))
     fi
 
     if [[ -z "${TOTAL_COVERAGE_PERCENTAGE}" ]]; then
-       exitAfterNoCoverageReportFoundError
+       TOTAL_COVERAGE_PERCENTAGE=0
     fi
     
     echo $((TOTAL_COVERAGE_PERCENTAGE)) > ${VBNET_CODE_COVERAGE_INFO}
