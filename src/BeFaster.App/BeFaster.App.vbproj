@@ -109,6 +109,8 @@
     <Compile Include="Solutions\FIZ\FizzBuzz.vb" />
     <Compile Include="Solutions\CHK\Checkout.vb" />
     <Compile Include="Solutions\SUM\Sum.vb" />
+    <Compile Include="Solutions\TST\One.vb" />
+    <Compile Include="Solutions\TST\Two.vb" />
     <Compile Include="SendCommandToServer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
