@@ -32,6 +32,7 @@ mkdir -p ${VBNET_TEST_COVERAGE_DIR}
 [ -e ${SCRIPT_CURRENT_DIR}/__Instrumented ] && rm -fr ${SCRIPT_CURRENT_DIR}/__Instrumented
 [ -e ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover ] && rm -fr ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover
 
+# Instrument the binaries so that coverage can be collected
 (
     cd ${SCRIPT_CURRENT_DIR} && \
     mono ${SCRIPT_CURRENT_DIR}/packages/altcover.3.5.569/tools/net45/AltCover.exe \
@@ -51,6 +52,7 @@ mkdir -p ${VBNET_TEST_COVERAGE_DIR}
       --xmlReport=${VBNET_INSTRUMENTED_COVERAGE_REPORT} || true
 )
 
+# Run the tests against the instrumented binaries
 (
   cd ${SCRIPT_CURRENT_DIR} && \
     mono ${SCRIPT_CURRENT_DIR}/packages/altcover.3.5.569/tools/net45/AltCover.exe Runner                \
@@ -66,46 +68,18 @@ mkdir -p ${VBNET_TEST_COVERAGE_DIR}
 
 if [ -f "${VBNET_INSTRUMENTED_COVERAGE_REPORT}" ]; then
     TOTAL_COVERAGE_PERCENTAGE=0
+    COVERAGE_SUMMARY_FILE=${VBNET_TEST_COVERAGE_DIR}/coverage-summary-${CHALLENGE_ID}.xml
     COVERAGE_IN_PACKAGE=$(xmllint ${VBNET_INSTRUMENTED_COVERAGE_REPORT} \
-                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'")]' || true)
+                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'")]/Summary' || true)
 
-   if [[ -z "${COVERAGE_IN_PACKAGE}" ]]; then
-      echo $((TOTAL_COVERAGE_PERCENTAGE)) > ${VBNET_CODE_COVERAGE_INFO}
-      cat ${VBNET_CODE_COVERAGE_INFO}
-      exit 0
+   echo "<xml>${COVERAGE_IN_PACKAGE}</xml>" > ${COVERAGE_SUMMARY_FILE}
+   if [[ ! -z "${COVERAGE_IN_PACKAGE}" ]]; then
+     COVERED=$(xmllint ${COVERAGE_SUMMARY_FILE} --xpath  'sum(//Summary/@visitedSequencePoints)')
+     TOTAL_LINES=$(xmllint ${COVERAGE_SUMMARY_FILE} --xpath  'sum(//Summary/@numSequencePoints)')
+     TOTAL_COVERAGE_PERCENTAGE=$((${COVERED} * 100 / ${TOTAL_LINES}))
    fi
 
-    COVERAGE_SUMMARY_FILE=${VBNET_TEST_COVERAGE_DIR}/coverage-summary-${CHALLENGE_ID}.xml
-    echo "<xml>${COVERAGE_IN_PACKAGE}</xml>"               \
-         | xmllint --xpath '//Class/Summary' - 2>/dev/null \
-         | sed "s/<Summary/\\n<Summary/g" | sed '/^$/d' | sed -e '$a\' > ${COVERAGE_SUMMARY_FILE}
-
-    while read -r eachSummaryLine
-    do
-        numMethods=$(echo ${eachSummaryLine} | xmllint --xpath 'string(//Summary/@numMethods)' - || true)
-        visitedMethods=$(echo ${eachSummaryLine} | xmllint --xpath 'string(//Summary/@visitedMethods)' - || true)
-        if [[ -z "${numMethods}" ]] || [[ ${numMethods} -eq 0 ]] || [[ -z "${visitedMethods}" ]] || [[ ${visitedMethods} -eq 0 ]]; then
-            sequenceCoverage=0
-        else
-            sequenceCoverage=$(( 100 * ${visitedMethods} / ${numMethods} ))
-        fi
-
-        TOTAL_COVERAGE_PERCENTAGE=$(( ${TOTAL_COVERAGE_PERCENTAGE} + ${sequenceCoverage} ))
-    done < ${COVERAGE_SUMMARY_FILE}
-
-    summaryLines=$(wc -l < ${COVERAGE_SUMMARY_FILE})
-
-    if [[ ${summaryLines} -eq 0 ]]; then
-        TOTAL_COVERAGE_PERCENTAGE=0
-    else
-        TOTAL_COVERAGE_PERCENTAGE=$(( ${TOTAL_COVERAGE_PERCENTAGE} / ${summaryLines} ))
-    fi
-
-    if [[ -z "${TOTAL_COVERAGE_PERCENTAGE}" ]]; then
-       TOTAL_COVERAGE_PERCENTAGE=0
-    fi
-    
-    echo $((TOTAL_COVERAGE_PERCENTAGE)) > ${VBNET_CODE_COVERAGE_INFO}
+    echo ${TOTAL_COVERAGE_PERCENTAGE} > ${VBNET_CODE_COVERAGE_INFO}
     cat ${VBNET_CODE_COVERAGE_INFO}
     exit 0
 else
