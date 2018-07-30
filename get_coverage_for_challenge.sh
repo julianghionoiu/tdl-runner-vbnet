@@ -23,6 +23,31 @@ mkdir -p ${VBNET_TEST_COVERAGE_DIR}
 ( cd ${SCRIPT_CURRENT_DIR} && \
      nuget restore befaster.sln )
 
+function insertVbcTag() {
+    targetProjectFile=$1
+    foundVbcTag=$(grep -i '<VbcToolExe>vbc</VbcToolExe>' ${targetProjectFile} || true)
+    if [[ -z "${foundVbcTag}" ]]; then
+       # We need to do this, or else xmlstarlet does not parse and amend the XML file
+       # And there is no equivalent xmlstarlet command for it, its a bit of a catch 22
+       if [ "$(uname)" == "Darwin" ]; then
+          sed -i -e "s/ xmlns.*=[\"].*[\"]//g" ${targetProjectFile}
+       else
+          sed -i 's/ xmlns.*=".*"//g' ${targetProjectFile}        
+       fi
+       ## This looks like a round about way to add a new node 'PropertyGroupVbc' and then rename it, because of the presence of multiple 'PropertyGroup' nodes
+       xmlstarlet ed --inplace --subnode '/Project' --type elem --name PropertyGroupVbc --value "" ${targetProjectFile}
+       xmlstarlet ed --inplace --subnode '//PropertyGroupVbc' --type elem --name VbcToolExe --value "vbc" ${targetProjectFile}
+       xmlstarlet ed --inplace --rename  '/Project/PropertyGroupVbc' -v 'PropertyGroup' ${targetProjectFile}
+
+       ## Add the attribute back or else build tools fail
+       xmlstarlet ed --inplace --subnode '/Project' --type attr -n xmlns -v "http://schemas.microsoft.com/developer/msbuild/2003" ${targetProjectFile}
+    fi
+}
+
+insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.App/BeFaster.App.vbproj"
+insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.Runner/BeFaster.Runner.csproj"
+insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/BeFaster.App.Tests.vbproj"
+
 (
     cd ${SCRIPT_CURRENT_DIR} && \
         msbuild ${SCRIPT_CURRENT_DIR}/befaster.sln                \
