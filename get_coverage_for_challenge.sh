@@ -29,8 +29,11 @@ function insertVbcTag() {
     if [[ -z "${foundVbcTag}" ]]; then
        # We need to do this, or else xmlstarlet does not parse and amend the XML file
        # And there is no equivalent xmlstarlet command for it, its a bit of a catch 22
-       sed -i 's/ xmlns.*=".*"//g' ${targetProjectFile}
-
+       if [ "$(uname)" == "Darwin" ]; then
+          sed -i -e "s/ xmlns.*=[\"].*[\"]//g" ${targetProjectFile}
+       else
+          sed -i 's/ xmlns.*=".*"//g' ${targetProjectFile}        
+       fi
        ## This looks like a round about way to add a new node 'PropertyGroupVbc' and then rename it, because of the presence of multiple 'PropertyGroup' nodes
        xmlstarlet ed --inplace --subnode '/Project' --type elem --name PropertyGroupVbc --value "" ${targetProjectFile}
        xmlstarlet ed --inplace --subnode '//PropertyGroupVbc' --type elem --name VbcToolExe --value "vbc" ${targetProjectFile}
