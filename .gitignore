@@ -258,3 +258,6 @@ paket-files/
 
 __UnitTestWithAltCover
 coverage
+coverage.tdl
+*.vbproj-e
+*.csproj-e
