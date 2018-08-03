@@ -161,4 +161,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets"/>
+  <PropertyGroup>
+    <VbcToolExe>vbc</VbcToolExe>
+  </PropertyGroup>
 </Project>
