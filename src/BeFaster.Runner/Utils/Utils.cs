@@ -14,7 +14,8 @@ namespace BeFaster.Runner.Utils
 
         public static ImplementationRunnerConfig GetRunnerConfig() =>
             new ImplementationRunnerConfig()
-                .SetUniqueId(CredentialsConfigFile.Get("tdl_username"))
+                .SetRequestQueueName(CredentialsConfigFile.Get("tdl_request_queue_name"))
+                .SetResponseQueueName(CredentialsConfigFile.Get("tdl_response_queue_name"))
                 .SetHostname(CredentialsConfigFile.Get("tdl_hostname"));
     }
 }
