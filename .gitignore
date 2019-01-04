@@ -1,5 +1,7 @@
 config/credentials.config
 record/localstore
+record/bin
+jre
 .DS_Store
 challenges/*.txt
 
