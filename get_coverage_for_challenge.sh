@@ -57,6 +57,12 @@ insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/BeFaster.App.Tests.vb
 [ -e ${SCRIPT_CURRENT_DIR}/__Instrumented ] && rm -fr ${SCRIPT_CURRENT_DIR}/__Instrumented
 [ -e ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover ] && rm -fr ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover
 
+if [[ ! -e "${SCRIPT_CURRENT_DIR}/src/BeFaster.App/Solutions/${CHALLENGE_ID}" ]]; then
+   echo "" > ${VBNET_CODE_COVERAGE_INFO}
+   echo "The provided CHALLENGE_ID: '${CHALLENGE_ID}' isn't valid, aborting process..."
+   exit 1
+fi
+
 # Instrument the binaries so that coverage can be collected
 FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find . -path *altcover* | head -n 1 || true)"/tools/net45/AltCover.exe
 
@@ -99,7 +105,7 @@ if [ -f "${VBNET_INSTRUMENTED_COVERAGE_REPORT}" ]; then
     TOTAL_COVERAGE_PERCENTAGE=0
     COVERAGE_SUMMARY_FILE=${VBNET_TEST_COVERAGE_DIR}/coverage-summary-${CHALLENGE_ID}.xml
     COVERAGE_IN_PACKAGE=$(xmllint ${VBNET_INSTRUMENTED_COVERAGE_REPORT} \
-                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'.")]/Summary' || true)
+                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'.")]/Summary')
 
    echo "<xml>${COVERAGE_IN_PACKAGE}</xml>" > ${COVERAGE_SUMMARY_FILE}
    if [[ ! -z "${COVERAGE_IN_PACKAGE}" ]]; then
