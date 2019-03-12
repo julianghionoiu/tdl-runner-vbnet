@@ -69,6 +69,7 @@ FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find . -path *altcover* | h
 (
     cd ${SCRIPT_CURRENT_DIR} && \
     mono ${SCRIPT_CURRENT_DIR}/${FULL_PATH_TO_ALTCOVER}                           \
+      --dropReturnCode                                                            \
       --opencover --linecover                                                     \
       --inputDirectory ${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/bin/Debug     \
       --assemblyFilter=Adapter                                                    \
