@@ -64,12 +64,13 @@ if [[ ! -e "${SCRIPT_CURRENT_DIR}/src/BeFaster.App/Solutions/${CHALLENGE_ID}" ]]
 fi
 
 # Instrument the binaries so that coverage can be collected
-FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find . -path *altcover* | head -n 1 || true)"/tools/net45/AltCover.exe
+FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find packages -path *altcover* | head -n 1 || true)"/tools/net45/AltCover.exe
 
 (
     cd ${SCRIPT_CURRENT_DIR} && \
     mono ${SCRIPT_CURRENT_DIR}/${FULL_PATH_TO_ALTCOVER}                           \
       --opencover --linecover                                                     \
+      --dropReturnCode                                                            \
       --inputDirectory ${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/bin/Debug     \
       --assemblyFilter=Adapter                                                    \
       --assemblyFilter=Mono                                                       \
@@ -86,7 +87,7 @@ FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find . -path *altcover* | h
 )
 
 # Run the tests against the instrumented binaries
-FULL_PATH_TO_NUNIT_CONSOLE="$(cd ${SCRIPT_CURRENT_DIR} && find . -path *nunit*console.exe | head -n 1 || true)"
+FULL_PATH_TO_NUNIT_CONSOLE="$(cd ${SCRIPT_CURRENT_DIR} && find packages -path *nunit*console.exe | head -n 1 || true)"
 
 (
   cd ${SCRIPT_CURRENT_DIR} && \
