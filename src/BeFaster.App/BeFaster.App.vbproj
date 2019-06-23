@@ -125,6 +125,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Solutions\ARRS\ArraySum.vb" />
+    <Compile Include="Solutions\IRNG\IntRange.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -163,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Solutions\ARRS\" />
+    <Folder Include="Solutions\IRNG\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
