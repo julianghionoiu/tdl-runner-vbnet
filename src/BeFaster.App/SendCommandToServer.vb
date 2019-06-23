@@ -8,6 +8,7 @@ Imports BeFaster.Runner.Utils
 Imports TDL.Client
 Imports TDL.Client.Queue
 Imports TDL.Client.Runner
+Imports Newtonsoft.Json.Linq
 
 '
 ' ~~~~~~~~~~ Running the system: ~~~~~~~~~~~~~
@@ -58,10 +59,10 @@ Module SendCommandToServer
         Dim runner As IImplementationRunner =
             New QueueBasedImplementationRunner.Builder().
                 SetConfig(Utils.GetRunnerConfig()).
-                WithSolutionFor("sum", Function(p() As String) Sum.Sum(p(0).AsInt(), p(1).AsInt())).
-                WithSolutionFor("hello", Function(p() As String) Hello.Hello(p(0))).
-                WithSolutionFor("fizz_buzz", Function(p() As String) FizzBuzz.FizzBuzz(p(0).AsInt())).
-                WithSolutionFor("checkout", Function(p() As String) Checkout.Checkout(p(0))).
+                WithSolutionFor("sum", Function(p As List(of JToken)) Sum.Sum(p(0).ToObject(of Integer)(), p(1).ToObject(of Integer)())).
+                WithSolutionFor("hello", Function(p As List(of JToken)) Hello.Hello(p(0).ToObject(of String)())).
+                WithSolutionFor("fizz_buzz", Function(p As List(of JToken)) FizzBuzz.FizzBuzz(p(0).ToObject(of Integer)())).
+                WithSolutionFor("checkout", Function(p As List(of JToken)) Checkout.Checkout(p(0)).ToObject(of String)()).
                 Create()
 
         ChallengeSession.
