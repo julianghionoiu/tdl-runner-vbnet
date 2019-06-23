@@ -2,6 +2,7 @@
 Imports BeFaster.App.Solutions.CHK
 Imports BeFaster.App.Solutions.HLO
 Imports BeFaster.App.Solutions.FIZ
+Imports BeFaster.App.Solutions.ARRS
 Imports BeFaster.Runner
 Imports BeFaster.Runner.Extensions
 Imports BeFaster.Runner.Utils
@@ -61,8 +62,9 @@ Module SendCommandToServer
                 SetConfig(Utils.GetRunnerConfig()).
                 WithSolutionFor("sum", Function(p As List(of JToken)) Sum.Sum(p(0).ToObject(of Integer)(), p(1).ToObject(of Integer)())).
                 WithSolutionFor("hello", Function(p As List(of JToken)) Hello.Hello(p(0).ToObject(of String)())).
+                WithSolutionFor("array_sum", Function(p As List(of JToken)) ArraySum.Compute(p(0).ToObject(of List(of Integer))())).
                 WithSolutionFor("fizz_buzz", Function(p As List(of JToken)) FizzBuzz.FizzBuzz(p(0).ToObject(of Integer)())).
-                WithSolutionFor("checkout", Function(p As List(of JToken)) Checkout.Checkout(p(0)).ToObject(of String)()).
+                WithSolutionFor("checkout", Function(p As List(of JToken)) Checkout.Checkout(p(0).ToObject(of String)())).
                 Create()
 
         ChallengeSession.
