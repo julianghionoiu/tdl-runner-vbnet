@@ -57,11 +57,20 @@ insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/BeFaster.App.Tests.vb
 [ -e ${SCRIPT_CURRENT_DIR}/__Instrumented ] && rm -fr ${SCRIPT_CURRENT_DIR}/__Instrumented
 [ -e ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover ] && rm -fr ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover
 
+if [[ ! -e "${SCRIPT_CURRENT_DIR}/src/BeFaster.App/Solutions/${CHALLENGE_ID}" ]]; then
+   echo "" > ${VBNET_CODE_COVERAGE_INFO}
+   echo "The provided CHALLENGE_ID: '${CHALLENGE_ID}' isn't valid, aborting process..."
+   exit 1
+fi
+
 # Instrument the binaries so that coverage can be collected
+FULL_PATH_TO_ALTCOVER="$(cd ${SCRIPT_CURRENT_DIR} && find packages -path *altcover* | head -n 1 || true)"/tools/net45/AltCover.exe
+
 (
     cd ${SCRIPT_CURRENT_DIR} && \
-    mono ${SCRIPT_CURRENT_DIR}/packages/altcover.3.5.569/tools/net45/AltCover.exe \
+    mono ${SCRIPT_CURRENT_DIR}/${FULL_PATH_TO_ALTCOVER}                           \
       --opencover --linecover                                                     \
+      --dropReturnCode                                                            \
       --inputDirectory ${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/bin/Debug     \
       --assemblyFilter=Adapter                                                    \
       --assemblyFilter=Mono                                                       \
@@ -74,18 +83,20 @@ insertVbcTag "${SCRIPT_CURRENT_DIR}/src/BeFaster.App.Tests/BeFaster.App.Tests.vb
       --assemblyExcludeFilter=Mono\.DllMap.+                                      \
       --typeFilter=System.                                                        \
       --outputDirectory=${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover              \
-      --xmlReport=${VBNET_INSTRUMENTED_COVERAGE_REPORT} || true
+      --xmlReport=${VBNET_INSTRUMENTED_COVERAGE_REPORT}
 )
 
 # Run the tests against the instrumented binaries
+FULL_PATH_TO_NUNIT_CONSOLE="$(cd ${SCRIPT_CURRENT_DIR} && find packages -path *nunit*console.exe | head -n 1 || true)"
+
 (
   cd ${SCRIPT_CURRENT_DIR} && \
-    mono ${SCRIPT_CURRENT_DIR}/packages/altcover.3.5.569/tools/net45/AltCover.exe Runner                \
-        --executable ${SCRIPT_CURRENT_DIR}/packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe  \
-        --recorderDirectory ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover/                               \
-        -w ${SCRIPT_CURRENT_DIR}                                                                        \
-        -- --noheader --labels=All  --work=${SCRIPT_CURRENT_DIR}                                        \
-        --result=${VBNET_TEST_RUN_REPORT}                                                     \
+    mono ${SCRIPT_CURRENT_DIR}/${FULL_PATH_TO_ALTCOVER} Runner                \
+        --executable ${SCRIPT_CURRENT_DIR}/${FULL_PATH_TO_NUNIT_CONSOLE}      \
+        --recorderDirectory ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover/     \
+        -w ${SCRIPT_CURRENT_DIR}                                              \
+        -- --noheader --labels=All  --work=${SCRIPT_CURRENT_DIR}              \
+        --result=${VBNET_TEST_RUN_REPORT}                                     \
         ${SCRIPT_CURRENT_DIR}/__UnitTestWithAltCover/BeFaster.App.Tests.dll || true
 )
 
@@ -95,7 +106,7 @@ if [ -f "${VBNET_INSTRUMENTED_COVERAGE_REPORT}" ]; then
     TOTAL_COVERAGE_PERCENTAGE=0
     COVERAGE_SUMMARY_FILE=${VBNET_TEST_COVERAGE_DIR}/coverage-summary-${CHALLENGE_ID}.xml
     COVERAGE_IN_PACKAGE=$(xmllint ${VBNET_INSTRUMENTED_COVERAGE_REPORT} \
-                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'.")]/Summary' || true)
+                                  --xpath '//Class[starts-with(./FullName,"BeFaster.App.Solutions.'${CHALLENGE_ID}'.")]/Summary')
 
    echo "<xml>${COVERAGE_IN_PACKAGE}</xml>" > ${COVERAGE_SUMMARY_FILE}
    if [[ ! -z "${COVERAGE_IN_PACKAGE}" ]]; then
