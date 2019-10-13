@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Solutions\ARRS\ArraySum.vb" />
     <Compile Include="Solutions\IRNG\IntRange.vb" />
+    <Compile Include="Solutions\CHL\Checklite.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -165,6 +166,7 @@
   <ItemGroup>
     <Folder Include="Solutions\ARRS\" />
     <Folder Include="Solutions\IRNG\" />
+    <Folder Include="Solutions\CHL\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
