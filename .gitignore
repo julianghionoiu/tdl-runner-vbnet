@@ -1,0 +1,94 @@
+# ~~~~~~~~~ Global ~~~~~~~~~
+
+# Ignore all dot folders
+.*/
+
+# ~~~~~~~~~ Language specific ~~~~~~~~~
+
+# Test output
+__UnitTestWithAltCover
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+
+# Artifact files
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+*.pidb
+*.svclog
+*.scc
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# DocProject is a documentation generator add-in
+DocProject/
+
+# The packages folder can be ignored because of Package Restore
+packages/
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+
+# ~~~~~~~~~ IDE specific ~~~~~~~~~
+
+# Idea
+*.iml
+.fake
+
+# ~~~~~~~~~ Accelerate ~~~~~~~~~
+challenges/
+config/
+coverage/
+coverage.tdl
+jre/
+record/
+
