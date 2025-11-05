@@ -66,6 +66,7 @@ Namespace BeFaster.App
                     WithSolutionFor("fizz_buzz", AddressOf entryPointMapping.FizzBuzz).
                     WithSolutionFor("checkout", AddressOf entryPointMapping.Checkout).
                     WithSolutionFor("rabbit_hole", AddressOf entryPointMapping.RabbitHole).
+                    WithSolutionFor("render_house", AddressOf entryPointMapping.RenderHouse).
                     WithSolutionFor("amazing_maze", AddressOf entryPointMapping.AmazingMaze).
                     WithSolutionFor("ultimate_maze", AddressOf entryPointMapping.UltimateMaze).
                     WithSolutionFor("increment", AddressOf entryPointMapping.Increment).

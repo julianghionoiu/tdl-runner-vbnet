@@ -4,6 +4,7 @@ Imports BeFaster.App.Solutions.DMO
 Imports BeFaster.App.Solutions.FIZ
 Imports BeFaster.App.Solutions.HLO
 Imports BeFaster.App.Solutions.RBT
+Imports BeFaster.App.Solutions.HOC
 Imports BeFaster.App.Solutions.SUM
 Imports BeFaster.App.Solutions.ULT
 
@@ -20,6 +21,7 @@ Namespace BeFaster.App
         Private ReadOnly fizzBuzzSolution As FizzBuzzSolution
         Private ReadOnly checkoutSolution As CheckoutSolution
         Private ReadOnly rabbitHoleSolution As RabbitHoleSolution
+        Private ReadOnly houseOfCardsSolution As HouseOfCardsSolution
         Private ReadOnly amazingSolution As AmazingSolution
         Private ReadOnly ultimateSolution As UltimateSolution
         Private ReadOnly demoRound1Solution As DemoRound1Solution
@@ -33,6 +35,7 @@ Namespace BeFaster.App
             fizzBuzzSolution = New FizzBuzzSolution()
             checkoutSolution = New CheckoutSolution()
             rabbitHoleSolution = New RabbitHoleSolution()
+            houseOfCardsSolution = New HouseOfCardsSolution()
             amazingSolution = New AmazingSolution()
             ultimateSolution = New UltimateSolution()
             demoRound1Solution = New DemoRound1Solution()
@@ -63,6 +66,13 @@ Namespace BeFaster.App
                 p(1).GetAsInteger(),
                 p(2).GetAsString(),
                 p(3).GetAsMapOf(Of String)()
+            )
+        End Function
+
+        Public Function RenderHouse(p As List(Of ParamAccessor)) As Object
+            Return houseOfCardsSolution.RenderHouse(
+                p(0).GetAsString(),
+                p(1).GetAsMapOf(Of String)()
             )
         End Function
 
